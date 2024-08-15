@@ -54,4 +54,6 @@ router.get('/editProfile',userController.getEditProfile);
 router.post('/updateProfile',upload.single('profile_picture'),userController.postUpdateprofile);
 router.post('/postComment',userController.postComment);
 router.get('/loadposts',userController.getloadposts);
+
+router.get('/seeprofile/:ID',userController.getseeprofile)
 module.exports=router;

@@ -25,7 +25,10 @@
                 <div class="user-card">
                     <img src="<%= user.profilepicture %>" alt="User Avatar" class="user-avatar">
                     <div class="user-info">
-                        <h2 class="user-name"><%= user.username %></h2>
+                        <!-- Clicking the username redirects to the profile page -->
+                        <h2 class="user-name">
+                            <a href="/seeprofile/<%= user._id %>"><%= user.username %></a>
+                        </h2>
                         <button class="follow-btn <%= user.followed ? 'followed' : '' %>" onclick="followUser(this,'<%= user._id %>')">
                             <%= user.followed ? 'Followed' : 'Follow' %>
                         </button>

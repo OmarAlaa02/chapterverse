@@ -53,8 +53,7 @@ app.use('/', (req, res) => {
 })
 
 mongoose.connect(url,{
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+    
 })
 .then(() => {
         app.listen(3000, () => console.log('listeing'));

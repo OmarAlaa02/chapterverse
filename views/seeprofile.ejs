@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= user.username %>'s Profile</title>
+    <link rel="stylesheet" href="/seeprofile.css">
+</head>
+<body>
+    <div class="profile-container">
+        <!-- Profile section -->
+        <div class="profile-header">
+            <img src="/<%=user.profilepicture%>" alt="<%= user.username %>'s profile picture" class="profile-picture">
+            <div class="profile-name"><%= user.username %></div>
+        </div>
+        
+        <!-- Posts section -->
+        <section class="posts-section">
+            <h2>Posts</h2>
+            <div class="posts-container">
+                <!-- Loop through posts -->
+                <% for (let post of posts) { %>
+                    <div class="post">
+                        <!-- Post Header -->
+                        <div class="post-header">
+                            <img src="/<%= user.profilepicture %>" alt="User Avatar" class="post-avatar">
+                            <div class="post-info">
+                                <h2 class="post-username"><%= user.username %></h2>
+                            </div>
+                        </div>
+
+                        <!-- Post Content -->
+                        <div class="post-content">
+                            <h3><%= post.title %></h3>
+                            <p><%= post.content %></p>
+                            
+                            <!-- Display post image if it exists -->
+                            <% if (post.img && post.img !== "") { %>
+                                <img src="/<%= post.img %>" alt="Post Image" class="post-image">
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="post-actions">
+                        <button class="like-btn <%= post.isliked ? 'liked' : '' %>" onclick="likepost(this,'<%= post._id %>')"><%= post.isliked ? 'liked' : 'like' %> <%=post.likecount%></button>
+                        <button class="comment-btn" onclick="viewcomments(this,'<%= post._id %>')">Comment</button>
+                    </div>
+                    <div id="comments-section-<%= post._id %>" class="comments-section">
+                        <div class="comments-list">
+                            <!-- Comments will be dynamically inserted here -->
+                        </div>
+                        <form class="comment-form" onsubmit="postComment(event, '<%= post._id %>')">
+                            <textarea name="comment" placeholder="Add a comment..." required></textarea>
+                            <button type="submit">Post Comment</button>
+                        </form>
+                    </div>
+                <% } %>
+            </div>
+        </section>
+    </div>
+    
+</body>
+</html>

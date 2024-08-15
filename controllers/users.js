@@ -334,3 +334,23 @@ exports.getloadposts=async(req,res)=>{
     });
 
 }
+
+exports.getseeprofile=async(req,res)=>
+{
+    userid=req.params.ID;
+    //console.log(userid);
+    user=await UsersDB.findById(userid);
+    console.log(user);
+    const posts=await postsDB.find({authorID:user._id});
+    for(let post of posts)
+        {
+            post.isliked=(await likesDB.find({userID:user._id,postID:post._id})).length >0;
+        }
+
+    res.render('seeprofile',{
+        user:user,
+        posts:posts
+    });
+    
+
+}
