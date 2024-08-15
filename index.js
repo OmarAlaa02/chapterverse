@@ -48,6 +48,7 @@ app.use(userRouter);
 
 app.use('/', (req, res) => {
     res.send('<h1>Not found</h1>');
+    console.log('asser was here');
     res.end();
 })
 
