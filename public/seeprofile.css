@@ -1,4 +1,4 @@
-/* General styles */
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -49,6 +49,8 @@ body {
 }
 
 .posts-container {
+    max-width: 500px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -56,6 +58,7 @@ body {
 
 .post {
     background-color: #fafafa;
+    border: 1px solid #ddd;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -69,8 +72,8 @@ body {
 }
 
 .post-avatar {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
     margin-right: 10px;
@@ -78,7 +81,8 @@ body {
 }
 
 .post-info {
-    font-size: 18px;
+    display: flex;
+    flex-direction: column;
 }
 
 .post-username {
@@ -89,7 +93,7 @@ body {
 
 /* Post Content */
 .post-content {
-    margin-top: 10px;
+    margin: 15px 0;
 }
 
 .post-content h3 {
@@ -106,8 +110,103 @@ body {
 
 .post-image {
     width: 100%;
-    max-height: 400px;
+    height: 100%;
     object-fit: cover;
     border-radius: 10px;
     margin-top: 10px;
+}
+
+/* Post Actions */
+.post-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.like-btn, .comment-btn, .post-comment-btn {
+    background: none; 
+    border: none;     
+    padding: 0;      
+    cursor: pointer;  
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+.like-btn img, .comment-btn img, .post-comment-img {
+    width: 24px;  
+    height: 24px; 
+    transition: opacity 0.3s; 
+}
+
+.like-btn:hover img, .comment-btn:hover img, .post-comment-btn:hover .post-comment-img {
+    opacity: 0.8; /* Hover effect */
+}
+
+/* Comment Section */
+.comments-section {
+    display: none; /* Hidden by default */
+    margin-top: 15px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
+.comments-list {
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.comment-form textarea {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 10px;
+}
+footer {
+    background-color: #ffffff;
+    border-top: 1px solid #ddd;
+    padding: 10px 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.footer-btn {
+    text-align: center;
+    color: #333;
+    text-decoration: none;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-btn img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 5px;
+}
+
+.footer-btn span {
+    font-size: 12px;
+}
+
+.footer-btn.active {
+    color: #5c67f2;
+}
+
+.footer-btn:hover {
+    color: #5c67f2;
+}
+
+/* Hidden Span */
+.hidden-span {
+    display: none;
 }
