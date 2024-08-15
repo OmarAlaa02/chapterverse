@@ -119,15 +119,22 @@ exports.getHomePage=async(req,res)=>{
 
     const page = parseInt(req.query.page) || 1;
     const limit = 4;
-    const skip = (page - 1) * limit;
     let followers=await followsDB.find({followerID:req.session.userID});
     
     followers=followers.map(user=>user.followedID);
     followers.push(req.session.userID);
-    const posts=await postsDB.find({authorID:{$in:followers}}).skip(skip).limit(limit);
+
+    let viewedposts=await viewsDB.find({userID:req.session.userID}).select('postID');
+    viewedposts=viewedposts.map(post=>post.postID);
+    const posts=await postsDB.find({_id:{$nin :viewedposts},authorID:{$in:followers}}).limit(limit);
     //will lower complexity after pagination
     for(let post of posts)
     {
+        //add view
+        const viewEntry=new viewsDB({userID:req.session.userID , postID:post._id});
+        //optional await
+        await viewEntry.save();
+
         const user=await UsersDB.findById(post.authorID);
         const isliked=(await likesDB.find({postID:post._id,userID:req.session.userID})).length > 0;
         post.authorname=user.username;
@@ -312,20 +319,25 @@ exports.getloadposts=async(req,res)=>{
     
     followers=followers.map(user=>user.followedID);
     followers.push(req.session.userID);
-    const posts=await postsDB.find({authorID:{$in:followers}}).skip(skip).limit(limit);
-    //will lower complexity after pagination
+    //filterStart
+    
+    let viewedposts=await viewsDB.find({userID:req.session.userID}).select('postID');
+    viewedposts=viewedposts.map(post=>post.postID);
+    const posts=await postsDB.find({_id:{$nin :viewedposts},authorID:{$in:followers}}).limit(limit);
+
+    //filterEnd
     let authordata=[];
     for(let post of posts)
     {
+        //add view
+        const viewEntry=new viewsDB({userID:req.session.userID , postID:post._id});
+        //optional await
+        await viewEntry.save();
+
         const user=await UsersDB.findById(post.authorID);
         const isliked=(await likesDB.find({postID:post._id,userID:req.session.userID})).length > 0;
-        // post.authorname=user.username;
         authordata.push({authorname:user.username,authorprofilepicture:user.profilepicture,isliked:isliked})
-        // post.authorprofilepicture=;
-        // post.isliked=;
     }
-    // console.log(posts[0].authorname);
-    // console.log(posts[0].authorprofilepicture);
     res.json({
         posts:posts,
         user:req.session.userID,
