@@ -211,7 +211,7 @@ window.addEventListener('scroll', () => {
     console.log('sum',scrollTop+viewportHeight + 1 );
     console.log(documentHeight); 
     console.log('-------------------------------------------');
-    if (scrollTop + viewportHeight +200 >= documentHeight) {
+    if (scrollTop + viewportHeight +400 >= documentHeight) {
         console.log('reached for posts');
         loadposts();
     }
