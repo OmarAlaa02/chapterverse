@@ -206,12 +206,12 @@ window.addEventListener('scroll', () => {
     const scrollTop = window.scrollY;
     const viewportHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
-    // console.log('-------------------------------------------');
-    // // console.log(scrollTop);
-    // console.log('sum',scrollTop+viewportHeight + 1 );
-    // console.log(documentHeight); 
-    // console.log('-------------------------------------------');
-    if (scrollTop + viewportHeight +1 >= documentHeight) {
+    console.log('-------------------------------------------');
+    // console.log(scrollTop);
+    console.log('sum',scrollTop+viewportHeight + 1 );
+    console.log(documentHeight); 
+    console.log('-------------------------------------------');
+    if (scrollTop + viewportHeight +200 >= documentHeight) {
         console.log('reached for posts');
         loadposts();
     }

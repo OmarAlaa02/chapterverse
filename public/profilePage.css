@@ -109,7 +109,7 @@ main {
     margin-top: 50px; 
 }
 .posts-container {
-    max-width: 800px;
+    max-width: 500px;
     margin: 0 auto;
     padding-bottom: 100px;
 }
@@ -150,7 +150,11 @@ main {
     display: flex;
     gap: 10px;
 }
-
+.post-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the entire container */
+}
 .like-btn, .comment-btn {
     background-color: #007bff;
     color: #fff;
