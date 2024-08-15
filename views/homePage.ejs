@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - ChapterVerse</title>
+    <link rel="stylesheet" href="/homePage.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons/css/boxicons.min.css">
+    <style>
+        .like-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .like-btn img {
+            width: 24px; /* Adjust size as needed */
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to ChapterVerse</h1>
+    </header>
+
+    <main>
+        <div class="posts-container" id="post-container">
+            <!-- Example of a post -->
+            <% for(post of posts) {%>
+                <div class="post">
+                    <div class="post-header">
+                        <img src="<%= post.authorprofilepicture %>" alt="User Avatar" class="post-avatar">
+                        <div class="post-info">
+                            <h2 class="post-username"><%= post.authorname %></h2>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p><%= post.title %></p>
+                        <p><%= post.content %></p>
+                        <% if(post.img !== "") {%>
+                            <img src="<%= post.img %>" alt="Post Image">
+                        <% } %>
+                    </div>
+                    <div class="post-actions">
+                        <button class="like-btn <%= post.isliked ? 'liked' : '' %>" id="like-btn-<%= post._id %>" onclick="likepost(this, '<%= post._id %>')">
+                            <img id="like-img-<%= post._id %>" src="<%= post.isliked ? 'https://img.icons8.com/?size=100&id=yf0dOM7vHimr&format=png&color=228BE6' : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAgRJREFUSEvl1kuozVEUx/HPxUApAwNh4JWUx0CSmHiMjJTynKHIQJmYeOWRXEYmJEWmhJEMlJQZRRkokUiSiedM8vyvWv/b/x7n3PM/995z7sCenM7e+7++67f22mvtPmM0+saIayTgHZidjr/HTXyuK2S44J240gB5hyX4VAc+HPAq3MOEJoC9uNAN8Bw8xhR8w8r8fZGw3bg82uDJeIT5aXgLbuAoTuTcLLwdTfB43MXaNHoygfH3JebhCZbWgcaeumd8CbvS6C1swJ8ikxfjac4fRv9ogiNhzqfBZ1iW5xpTofxIp2FupngPDlTuZ1XAhwxlXJtyhCMLaqh8k04OXMFqqFfj/hBGIoMfNqzHnY0MrzuWZ4IOOuNDOJUWyixdg3CoVT4sxCaMa0M+lusHcabR2PEiYcoNZSSazdVVV90XiRgjBIXNQYq7BY6r+HMswOtwJ8EDla2aXN1SfBXb8KOo41PxtRehnoSPRUJNzLa5uTz4biuOunAxYeuL4nO7V+AHxfmuQBSfaUV9/90LcLTQ1wk6i/3V+9XNUJ/O8hu8KKvPewEOQVHTZ7Rql1XF1YZe9t140G1PT8u5OpVrUaWj7cO5xo+q4K24VsdqB3u+Yzq+DAWOQn+9aOwbOzDcbmtTta06ztzi6TqzncU267/wCvHebjrqPn1G6Me/n/9/4L/NLWMf7q05RAAAAABJRU5ErkJggg==' %>" alt="Like" />
+                        </button>
+                        <span id="likebutton-<%= post._id %>"><%= post.likecount %></span>
+
+                        <button class="comment-btn" id="comment-btn-<%= post._id %>" onclick="viewcomments('<%= post._id %>')">
+                            <img src="https://img.icons8.com/?size=100&id=143&format=png&color=1A1A1A" alt="Comment" />
+                        </button>
+                        <span id="comment-<%= post._id %>"><%= post.commentcount %></span>
+
+                    </div>
+                    <div id="comments-section-<%= post._id %>" class="comments-section">
+                        <div class="comments-list" id="comment-list-<%=post._id%>">
+                            <span class="hidden-span" id="page-<%= post._id %>">1</span>
+                            <!-- Comments will be loaded here -->
+                        </div>
+                        <textarea name="comment" placeholder="Add a comment..." required id="comment-area-<%= post._id %>"></textarea>
+                        <button type="button" class="post-comment-btn" onclick="postComment('<%= post._id %>', '<%= user %>')">
+                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAc5JREFUSEvtl88rRUEUxz8ve79iwcIfwMaKLSliQ2zsLBQpC/KjrLBRFoiFBbK3EDuU8AdYECsl2QohVoR76ozmjXd/vVtur0zdbm/mO/OZOefMPedlSKllUuISBi4D6oE6oCLiJu+BS+AMePKb4weuBlaAnogwP9kWMOw9spmslgtcCxwCVQmhZvoN0ALI+6e54BrgFKhUxTawChzF3ISA5KRdOk+gDfbJXfAu0KnicWAhJtCVT3sdM9q5BgwagQ2W097qgPimNyHUTN8H2oB3QIL1TQZscD+woWqJ5PMAcKlGu0gCoxdoBQ50rQ5gzwVPAXMqKAI+A8BNwLGONwMnAdpy4EHHR7xTL7tg8YX4xO3PtWYcsMz/0kVmjc9tU/+DjYntQDJ9EnxL+mNUA8x2iRtweZna9mfUG+YGXGGBUzP1/3USCxTEB6QYeFZ/jQGLST6ZcZKEXC2Tz7uBnSTgqPdZdJKZJEN9aFp8/QvwPDCpu1wHBsyO800SYSeWKkaqjXYVXnt5uNFKj1mFgJ2dwhaOM36lpjbVza+8O6SFXZxFw7SbXqkzATy6QtvUJV4J2ufV01IxJGl3Xj1+oaXTi99CYf8kkmwgcG5q4G8xPXofSsAHdAAAAABJRU5ErkJggg==" alt="Post Comment" class="post-comment-img" />
+                        </button>
+                        
+                    </div>
+                </div>
+            <% } %>
+            <!-- Repeat post divs for more posts -->
+        </div>
+    </main>
+
+    <%- include('./includes/footer') %>
+    <script src="/scripts/home.js"></script>
+    
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - ChapterVerse</title>
+    <link rel="stylesheet" href="/searchPage.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons/css/boxicons.min.css">
+</head>
+<body>
+    <header>
+        <h1>Search Users</h1>
+    </header>
+
+    <main>
+        <div class="search-container">
+            <form action="/search" method="post">
+                <input type="text" name="search" id="search-input" placeholder="Search for users...">
+                <button id="search-btn" type="submit">Search</button>
+            </form>
+        </div>
+
+        <div class="search-results">
+            <% for (let user of users) { %>
+                <div class="user-card">
+                    <img src="<%= user.profilepicture %>" alt="User Avatar" class="user-avatar">
+                    <div class="user-info">
+                        <h2 class="user-name"><%= user.username %></h2>
+                        <button class="follow-btn <%= user.followed ? 'followed' : '' %>" onclick="followUser(this,'<%= user._id %>')">
+                            <%= user.followed ? 'Followed' : 'Follow' %>
+                        </button>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <%- include('./includes/footer') %>
+    
+    <script src="/scripts/follow.js"></script>
+</body>
+</html>

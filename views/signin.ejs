@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - ChapterVerse</title>
+    <link rel="stylesheet" href="/signin.css">
+</head>
+<body>
+    <div class="signin-container">
+        <div class="signin-box">
+            <h1>Welcome to ChapterVerse</h1>
+            <form action="/signin" method="post">
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit">Sign In</button>
+                <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

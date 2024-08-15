@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - ChapterVerse</title>
+    <link rel="stylesheet" href="/editProfile.css">
+</head>
+<body>
+    <header>
+        <h1>Edit Profile</h1>
+    </header>
+
+    <main>
+        <section class="edit-profile-section">
+            <form id="edit-profile-form" action="/updateProfile" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="profile-picture">Profile Picture:</label>
+                    <input type="file" id="profile-picture" name="profile_picture" onchange="previewImage(event)">
+                    <img id="profile-picture-preview" src="/path/to/current-profile-picture.jpg" alt="Profile Picture Preview">
+                </div>
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="<%=user.username%>" required>
+                </div>
+                <button type="submit" class="submit-btn">Save Changes</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Footer content here -->
+    </footer>
+
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('profile-picture-preview').src = e.target.result;
+            }
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>

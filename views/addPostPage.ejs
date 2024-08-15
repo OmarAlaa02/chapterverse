@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Post - ChapterVerse</title>
+    <link rel="stylesheet" href="/addPost.css">
+</head>
+<body>
+    <header>
+        <h1>Add a New Post</h1>
+    </header>
+
+    <main>
+        <div class="post-container">
+            <form action="/addPost" method="post" enctype="multipart/form-data">
+                <div class="input-group">
+                    <label for="post-title">Title</label>
+                    <input type="text" id="post-title" name="title" placeholder="Enter your post title" required>
+                </div>
+                <div class="input-group">
+                    <label for="post-content">Content</label>
+                    <textarea id="post-content" name="content" rows="5" placeholder="What's on your mind?" required></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="post-image">Image</label>
+                    <input type="file" id="post-image" name="post-image">
+                </div>
+                <button type="submit">Post</button>
+            </form>
+        </div>
+    </main>
+
+    <%- include('./includes/footer')%>
+</body>
+</html>

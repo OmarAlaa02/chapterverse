@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - ChapterVerse</title>
+    <link rel="stylesheet" href="/profilePage.css">
+</head>
+<body>
+    
+
+    <main>
+        <section class="profile-section">
+            <div class="profile-header">
+                <img src="<%=user.profilepicture%>" alt="Profile Picture" class="profile-picture">
+                <div class="profile-info">
+                    <h2 class="profile-name"><%=user.username%></h2>
+                    <button class="edit-btn" onclick="window.location.href='/editProfile'">Edit Profile</button>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="posts-section">
+            <h2>Posts</h2>
+            <div class="posts-container">
+                <!-- Example of a post -->
+                <% for(let post of posts) {%>
+                    <div class="post">
+                        <div class="post-header">
+                            <img src="<%=user.profilepicture%>" alt="User Avatar" class="post-avatar">
+                            <div class="post-info">
+                                <h2 class="post-username"><%= user.username %></h2>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p><%= post.title%></p>
+                            <p><%= post.content %></p>
+                            <% if(post.img!=="") {%>
+                                <img src="<%=post.img%>" alt="post img">
+                            <%}%>
+                        </div>
+                        <div class="post-actions">
+                            <button class="like-btn <%= post.isliked ? 'liked' : '' %>" onclick="likepost(this,'<%= post._id %>')"><%= post.isliked ? 'liked' : 'like' %> <%=post.likecount%></button>
+                            <button class="comment-btn" onclick="viewcomments(this,'<%= post._id %>')">Comment</button>
+                        </div>
+                        <div id="comments-section-<%= post._id %>" class="comments-section">
+                            <div class="comments-list">
+                                <!-- Comments will be dynamically inserted here -->
+                            </div>
+                            <form class="comment-form" onsubmit="postComment(event, '<%= post._id %>')">
+                                <textarea name="comment" placeholder="Add a comment..." required></textarea>
+                                <button type="submit">Post Comment</button>
+                            </form>
+                        </div>
+                    </div>
+                <%}%>
+                <!-- Repeat post divs for more posts -->
+            </div>
+        </section>
+    </main>
+
+    <%- include('./includes/footer') %>
+    <script src="/scripts/home.js"></script>
+</body>
+</html>
