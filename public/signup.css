@@ -36,19 +36,19 @@ body {
 /* Header */
 .signup-box h1 {
     margin-bottom: 20px;
-    color: #333;
+    color:#00563f;
     text-align: center;
 }
 
 /* Input Groups */
 .input-group {
     margin-bottom: 15px;
+    color: #00563f;
 }
 
 .input-group label {
     display: block;
     margin-bottom: 5px;
-    color: #666;
 }
 
 .input-group input {
@@ -62,7 +62,7 @@ body {
 button {
     width: 100%;
     padding: 10px;
-    background-color: #5c67f2;
+    background-color: #00563f;
     color: white;
     border: none;
     border-radius: 5px;
@@ -71,7 +71,7 @@ button {
 }
 
 button:hover {
-    background-color: #4a56d6;
+    background-color: #00563f;
 }
 
 /* Sign In Link */
@@ -81,7 +81,7 @@ p {
 }
 
 p a {
-    color: #5c67f2;
+    color: #00563f;
     text-decoration: none;
 }
 

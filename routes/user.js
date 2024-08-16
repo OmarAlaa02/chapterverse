@@ -13,17 +13,11 @@ const fileStorage=multer.diskStorage({
 });
 
 const fileFilter=(req,file,cb)=>{
-    if(file.mimetype === 'image/png' || file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg')
-    {
+    
         cb(null,true);
-    }
-    else
-    {
-        cb(null,false);
-    }
 }
 
-const upload=multer({storage:fileStorage,fileFilter:fileFilter});
+const upload=multer({storage:fileStorage});
 
 router.get('/',userController.getSigninPage);
 router.post('/signin',userController.postsignin);

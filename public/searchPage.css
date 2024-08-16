@@ -72,6 +72,8 @@ main {
 /* Search Results */
 .search-results {
     margin-top: 20px;
+    padding-bottom: 100px; /* Adjust padding if needed */
+    margin-bottom: 60px;
 }
 
 .user-card {
@@ -98,10 +100,13 @@ main {
     align-items: center;
 }
 
-.user-name {
+.user-name a {
+    text-decoration: none;
+    color: black; /* Or whatever color you'd like */
     font-size: 18px;
-    color: #333;
 }
+
+
 
 .follow-btn {
     padding: 8px 15px;

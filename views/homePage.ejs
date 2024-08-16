@@ -6,6 +6,7 @@
     <title>Home - ChapterVerse</title>
     <link rel="stylesheet" href="/homePage.css">
     <link rel="stylesheet" href="https://unpkg.com/boxicons/css/boxicons.min.css">
+    
     <style>
         .like-btn {
             background: none;
@@ -39,9 +40,14 @@
                     <div class="post-content">
                         <p><%= post.title %></p>
                         <p><%= post.content %></p>
-                        <% if(post.img !== "") {%>
+                        <% if(post.img.includes('mp4')) {%>
+                            <video width="640" height="360" controls>
+                                <source src="<%= post.img %>" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        <% }else if(post.img !=="") { %>
                             <img src="<%= post.img %>" alt="Post Image">
-                        <% } %>
+                        <%}%>
                     </div>
                     <div class="post-actions">
                         <button class="like-btn <%= post.isliked ? 'liked' : '' %>" id="like-btn-<%= post._id %>" onclick="likepost(this, '<%= post._id %>')">

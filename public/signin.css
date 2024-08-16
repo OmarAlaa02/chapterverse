@@ -62,7 +62,7 @@ body {
 button {
     width: 100%;
     padding: 10px;
-    background-color: #5c67f2;
+    background-color: #00563f;
     color: white;
     border: none;
     border-radius: 5px;
@@ -71,7 +71,7 @@ button {
 }
 
 button:hover {
-    background-color: #4a56d6;
+    background-color: #00563f;
 }
 
 /* Sign Up Link */
@@ -81,7 +81,7 @@ p {
 }
 
 p a {
-    color: #5c67f2;
+    color: #00563f;
     text-decoration: none;
 }
 

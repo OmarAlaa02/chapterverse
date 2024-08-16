@@ -143,7 +143,14 @@ function loadposts() {
                             <p>${post.title}</p>
                             <p>${post.content}</p>`;
 
-                if (post.img !== "") {
+                if(post.img.includes('mp4'))
+                {
+                    postHTML+=`<video width="640" height="360" controls>
+                                <source src="${post.img}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>`;
+                }
+                else if (post.img !== "") {
                     postHTML += `<img src="${post.img}" alt="Post Image">`;
                 }
 

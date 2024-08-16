@@ -5,8 +5,9 @@ body {
 header {
     background: #00563f;
     color: #fff;
-    padding: 10px;
-    text-align: center;
+    padding: 2px 10px;
+    text-align: left;
+    font-family: cursive,Lucida Handwriting;
 }
 
 .content {

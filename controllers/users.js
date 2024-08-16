@@ -124,17 +124,17 @@ exports.getHomePage=async(req,res)=>{
     followers=followers.map(user=>user.followedID);
     followers.push(req.session.userID);
 
-    let viewedposts=await viewsDB.find({userID:req.session.userID});
-    viewedposts=viewedposts.map(post=>post.postID);
-    const posts=await postsDB.find({_id:{$nin :viewedposts},authorID:{$in:followers}}).limit(limit);
+    // let viewedposts=await viewsDB.find({userID:req.session.userID});
+    // viewedposts=viewedposts.map(post=>post.postID);
+    const posts=await postsDB.find({authorID:{$in:followers}}).limit(limit);
 
     //will lower complexity after pagination
     for(let post of posts)
     {
         //add view
-        const viewEntry=new viewsDB({userID:req.session.userID , postID:post._id});
-        //optional await
-        viewEntry.save();
+        // const viewEntry=new viewsDB({userID:req.session.userID , postID:post._id});
+        // //optional await
+        // viewEntry.save();
 
         const user=await UsersDB.findById(post.authorID);
         const isliked=(await likesDB.find({postID:post._id,userID:req.session.userID})).length > 0;
@@ -322,18 +322,18 @@ exports.getloadposts=async(req,res)=>{
     followers.push(req.session.userID);
     //filterStart
 
-    let viewedposts=await viewsDB.find({userID:req.session.userID}).select('postID');
-    viewedposts=viewedposts.map(post=>post.postID);
-    const posts=await postsDB.find({_id:{$nin :viewedposts},authorID:{$in:followers}}).limit(limit);
+    // let viewedposts=await viewsDB.find({userID:req.session.userID}).select('postID');
+    // viewedposts=viewedposts.map(post=>post.postID);
+    const posts=await postsDB.find({authorID:{$in:followers}}).skip(skip).limit(limit);
 
     //filterEnd
     let authordata=[];
     for(let post of posts)
     {
         //add view
-        const viewEntry=new viewsDB({userID:req.session.userID , postID:post._id});
-        //optional await
-        viewEntry.save();
+        // const viewEntry=new viewsDB({userID:req.session.userID , postID:post._id});
+        // //optional await
+        // viewEntry.save();
 
         const user=await UsersDB.findById(post.authorID);
         const isliked=(await likesDB.find({postID:post._id,userID:req.session.userID})).length > 0;
