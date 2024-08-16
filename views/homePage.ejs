@@ -28,6 +28,7 @@
 
     <main>
         <div class="posts-container" id="post-container">
+            <span class="hidden-span" id="lastpostID"><%=lastID%></span>
             <!-- Example of a post -->
             <% for(post of posts) {%>
                 <div class="post">
@@ -63,7 +64,7 @@
                     </div>
                     <div id="comments-section-<%= post._id %>" class="comments-section">
                         <div class="comments-list" id="comment-list-<%=post._id%>">
-                            <span class="hidden-span" id="page-<%= post._id %>">1</span>
+                            <span class="hidden-span" id="page-<%= post._id %>">0</span>
                             <!-- Comments will be loaded here -->
                         </div>
                         <textarea name="comment" placeholder="Add a comment..." required id="comment-area-<%= post._id %>"></textarea>

@@ -116,26 +116,17 @@ if (req.body.password === req.body.confirm_password) {
 }
 
 exports.getHomePage=async(req,res)=>{
-
-    const page = parseInt(req.query.page) || 1;
     const limit = 4;
     let followers=await followsDB.find({followerID:req.session.userID});
     
     followers=followers.map(user=>user.followedID);
     followers.push(req.session.userID);
 
-    // let viewedposts=await viewsDB.find({userID:req.session.userID});
-    // viewedposts=viewedposts.map(post=>post.postID);
-    const posts=await postsDB.find({authorID:{$in:followers}}).sort({ createdAt: -1 }).limit(limit);
+    const posts=await postsDB.find({authorID:{$in:followers}}).sort({ _id: -1 }).limit(limit);
 
     //will lower complexity after pagination
     for(let post of posts)
     {
-        //add view
-        // const viewEntry=new viewsDB({userID:req.session.userID , postID:post._id});
-        // //optional await
-        // viewEntry.save();
-
         const user=await UsersDB.findById(post.authorID);
         const isliked=(await likesDB.find({postID:post._id,userID:req.session.userID})).length > 0;
         post.authorname=user.username;
@@ -145,6 +136,7 @@ exports.getHomePage=async(req,res)=>{
 
     res.render('homePage',{
         posts:posts,
+        lastID:posts[posts.length-1]?._id || 0,
         user:req.session.userID
     });
 
@@ -270,14 +262,23 @@ exports.postunlike=async(req,res)=>
 
 exports.getComments=async(req,res)=>{
     const postID=req.params.ID;
-    const page=req.params.page;
-    const comments=await commentsDB.find({postID:postID}).skip(page * 4).limit(4);
+    const lastcommentsID=req.params.lastcommetnID;
+    let comments; 
+    console.log(postID);
+    if(lastcommentsID === '0')
+        comments=await commentsDB.find({postID:postID}).sort({_id:-1}).limit(4);
+    else
+        comments=await commentsDB.find({_id:{$lt:lastcommentsID},postID:postID}).sort({_id:-1}).limit(4);
+    console.log(comments);
     let users=[];
     for(let comment of comments)
     {
         users.push(await UsersDB.findById(comment.userID));
     }
-    res.json({comments,users});
+    res.json({comments:comments,
+        users:users,
+        lastcommentsID:comments[comments.length-1]?._id || lastcommentsID
+    });
 }
 
 exports.getEditProfile= async(req,res)=>{
@@ -313,10 +314,8 @@ exports.postComment= async(req,res)=>{
 
 
 exports.getloadposts=async(req,res)=>{
-    const page = parseInt(req.query.page)||1;
+    const lastpostID = req.params.lastpostID;
     const limit = 4;
-    const skip = (page - 1) * limit;
-    console.log({"page":page});
     let followers=await followsDB.find({followerID:req.session.userID});
     
     followers=followers.map(user=>user.followedID);
@@ -325,7 +324,7 @@ exports.getloadposts=async(req,res)=>{
 
     // let viewedposts=await viewsDB.find({userID:req.session.userID}).select('postID');
     // viewedposts=viewedposts.map(post=>post.postID);
-    const posts=await postsDB.find({authorID:{$in:followers}}).sort({ createdAt: -1 }).skip(skip).limit(limit);
+    const posts=await postsDB.find({_id:{$lt : lastpostID},authorID:{$in:followers}}).sort({ _id: -1 }).limit(limit);
 
     //filterEnd
     let authordata=[];
@@ -344,7 +343,7 @@ exports.getloadposts=async(req,res)=>{
         posts:posts,
         user:req.session.userID,
         authordata:authordata,
-        page:page
+        lastpostID:posts[posts.length-1]?._id || lastpostID
     });
 
 }

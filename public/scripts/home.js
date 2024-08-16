@@ -1,3 +1,4 @@
+
 function likepost(button, postID) {
 
 
@@ -49,22 +50,24 @@ function likepost(button, postID) {
 }
 
 
-function viewcomments(postId,page,cb) {
+function viewcomments(postId) {
     const commentsSection = document.getElementById(`comments-section-${postId}`);
 
-    if (cb || commentsSection.style.display === 'none' || commentsSection.style.display === '') {
+    if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
         
         //undefined handling
         commentsSection.style.display = 'block'; // Load comments when the section is shown
-        fetch(`/getComments/${postId}/${page}`)
+        const lastcommentsIDspan=document.getElementById(`page-${postId}`);
+        const lastcommentsID=lastcommentsIDspan.textContent;
+
+        fetch(`/getComments/${postId}/${lastcommentsID}`)
             .then(response => response.json())
             .then((data) => {
                 // console.log(data);
                 // console.log(typeof (data));
                 const commentsList = document.querySelector(`#comments-section-${postId} .comments-list`);
                 
-                if(!cb)
-                    commentsList.innerHTML = `<span class="hidden-span" id="page-${postId}">1</span>`;
+                
                 for (let i = 0; i < data.users.length; i++) {
                     commentsList.innerHTML +=
                         `<div class="comment">
@@ -75,9 +78,9 @@ function viewcomments(postId,page,cb) {
                             </div>
                         </div>`;
                 }
-                if(cb)
-                    cb();
-                
+                //need revision
+                console.log(data.comments[data.comments.length-1]._id);
+                lastcommentsIDspan.textContent=data.comments[data.comments.length-1]?._id || lastcommentsID;
             })
     } else {
         commentsSection.style.display = 'none';
@@ -116,17 +119,18 @@ function postComment(postID,userID)
 //let loading=false;
 //if(loading)return;
 //loading=true;
-let page = 2;
+// let page = 2;
 let isLoading = false;
 function loadposts() {
     if (isLoading) return;
     isLoading = true;
-    fetch(`/loadposts/?page=${page}`)
+    const lastpostSpan = document.getElementById(`lastpostID`);
+    console.log(lastpostSpan.textContent);
+    fetch(`/loadposts/${lastpostSpan.textContent}`)
         .then(response => response.json())
         .then(data => {
-            console.log(`Current page from server: ${data.page}`);
-            page ++;
             let i=0;
+            lastpostSpan.textContent=data.lastpostID;
             for(let post of data.posts)
             {
                 const postsection = document.getElementById(`post-container`);

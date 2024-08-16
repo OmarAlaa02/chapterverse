@@ -40,14 +40,14 @@ router.get('/profile',userController.getProfilePage);
 router.post('/like',userController.postlike);
 router.post('/unlike',userController.postunlike);
 
-router.get('/getComments/:ID/:page',userController.getComments);
+router.get('/getComments/:ID/:lastcommetnID',userController.getComments);
 
 router.get('getHomePage',userController.getHomePage);
 router.get('/editProfile',userController.getEditProfile);
 
 router.post('/updateProfile',upload.single('profile_picture'),userController.postUpdateprofile);
 router.post('/postComment',userController.postComment);
-router.get('/loadposts',userController.getloadposts);
+router.get('/loadposts/:lastpostID',userController.getloadposts);
 
 router.get('/seeprofile/:ID',userController.getseeprofile)
 module.exports=router;
