@@ -126,7 +126,7 @@ exports.getHomePage=async(req,res)=>{
 
     // let viewedposts=await viewsDB.find({userID:req.session.userID});
     // viewedposts=viewedposts.map(post=>post.postID);
-    const posts=await postsDB.find({authorID:{$in:followers}}).limit(limit);
+    const posts=await postsDB.find({authorID:{$in:followers}}).sort({ createdAt: -1 }).limit(limit);
 
     //will lower complexity after pagination
     for(let post of posts)
@@ -218,7 +218,8 @@ exports.postAddPost=async(req,res,next)=>{
         req.body.img=req.file.path;
 
     const addedPost=new postsDB(req.body);
-    addedPost.save().then(()=>{
+    await addedPost.save().then(()=>{
+        //console.log(addedpost)
         res.redirect('/home');
     })
 }
@@ -324,7 +325,7 @@ exports.getloadposts=async(req,res)=>{
 
     // let viewedposts=await viewsDB.find({userID:req.session.userID}).select('postID');
     // viewedposts=viewedposts.map(post=>post.postID);
-    const posts=await postsDB.find({authorID:{$in:followers}}).skip(skip).limit(limit);
+    const posts=await postsDB.find({authorID:{$in:followers}}).sort({ createdAt: -1 }).skip(skip).limit(limit);
 
     //filterEnd
     let authordata=[];
