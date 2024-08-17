@@ -50,10 +50,10 @@ function likepost(button, postID) {
 }
 
 
-function viewcomments(postId) {
+function viewcomments(postId,cb) {
     const commentsSection = document.getElementById(`comments-section-${postId}`);
 
-    if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
+    if (cb || commentsSection.style.display === 'none' || commentsSection.style.display === '') {
         
         //undefined handling
         commentsSection.style.display = 'block'; // Load comments when the section is shown
@@ -78,13 +78,32 @@ function viewcomments(postId) {
                             </div>
                         </div>`;
                 }
-                //need revision
-                console.log(data.comments[data.comments.length-1]._id);
-                lastcommentsIDspan.textContent=data.comments[data.comments.length-1]?._id || lastcommentsID;
+                
+                if(data.comments[data.comments.length-1])
+                    lastcommentsIDspan.textContent=data.comments[data.comments.length-1]._id ;
+                else
+                    lastcommentsIDspan.textContent=lastcommentsID;
+                // console.log(lastcommentsIDspan);
+                if(cb)
+                    cb();
             })
     } else {
         commentsSection.style.display = 'none';
     }
+}
+
+let commentloading=false;
+
+function onScrollToBottom(divId) {
+    if(commentloading)
+        return;
+    commentloading=true;
+    console.log(`User has reached the bottom of ${divId}`);
+    // Your function logic here
+    const postID=divId.split('-')[2];
+    viewcomments(postID,()=>{
+        commentloading=false;
+    });
 }
 
 
@@ -228,24 +247,7 @@ window.addEventListener('scroll', () => {
     }
 });
 
-let commentloading=false;
 
-function onScrollToBottom(divId) {
-    if(commentloading)
-        return;
-    commentloading=true;
-    console.log(`User has reached the bottom of ${divId}`);
-    // Your function logic here
-    const postID=divId.split('-')[2];
-    const spanID='page-'+postID;
-    const span=document.getElementById(spanID);
-    console.log(span.textContent);
-    const page=parseInt(span.textContent,10)
-    span.textContent=page+1;
-    viewcomments(postID,page,()=>{
-        commentloading=false;
-    });
-}
 
 const scrollableDivs = document.querySelectorAll('.comments-list');
         
@@ -255,12 +257,12 @@ scrollableDivs.forEach(div => {
         const scrollTop = div.scrollTop;
         const scrollHeight = div.scrollHeight;
         const clientHeight = div.clientHeight;
-        console.log('------------------------------');
-        console.log('scrollTop',scrollTop);
-        console.log('scrollHeight',scrollHeight);
-        console.log('clientHeight',clientHeight);
-        console.log('sum',clientHeight + scrollTop + 1);
-        console.log('------------------------------');
+        // console.log('------------------------------');
+        // console.log('scrollTop',scrollTop);
+        // console.log('scrollHeight',scrollHeight);
+        // console.log('clientHeight',clientHeight);
+        // console.log('sum',clientHeight + scrollTop + 1);
+        // console.log('------------------------------');
         if (scrollTop + clientHeight + 1>= scrollHeight) {
             onScrollToBottom(div.id);
         }
