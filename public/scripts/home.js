@@ -50,24 +50,32 @@ function likepost(button, postID) {
 }
 
 
-function viewcomments(postId,cb) {
+function viewcomments(postId,caller,cb) {
     const commentsSection = document.getElementById(`comments-section-${postId}`);
 
-    if (cb || commentsSection.style.display === 'none' || commentsSection.style.display === '') {
+    if (caller || commentsSection.style.display === 'none' || commentsSection.style.display === '') {
         
         //undefined handling
+        const wasclosed = commentsSection.style.display === 'none' || commentsSection.style.display === '';
         commentsSection.style.display = 'block'; // Load comments when the section is shown
         const lastcommentsIDspan=document.getElementById(`page-${postId}`);
+        
+        if(caller  === 'post' || wasclosed)
+            lastcommentsIDspan.textContent=0;
         const lastcommentsID=lastcommentsIDspan.textContent;
 
         fetch(`/getComments/${postId}/${lastcommentsID}`)
             .then(response => response.json())
             .then((data) => {
-                // console.log(data);
-                // console.log(typeof (data));
+                
+                const commentcountsection=document.getElementById(`comment-${postId}`);
+                commentcountsection.textContent=data.commentcount;
+
                 const commentsList = document.querySelector(`#comments-section-${postId} .comments-list`);
                 
-                
+                if(caller  === 'post' || wasclosed)
+                    commentsList.innerHTML='';
+
                 for (let i = 0; i < data.users.length; i++) {
                     commentsList.innerHTML +=
                         `<div class="comment">
@@ -101,7 +109,7 @@ function onScrollToBottom(divId) {
     console.log(`User has reached the bottom of ${divId}`);
     // Your function logic here
     const postID=divId.split('-')[2];
-    viewcomments(postID,()=>{
+    viewcomments(postID,'load',()=>{
         commentloading=false;
     });
 }
@@ -130,7 +138,10 @@ function postComment(postID,userID)
         const commentcount = document.getElementById(`comment-${postID}`);
         //append to comment section with skip of commentcount
         commentcount.textContent=data.commentcount;
-        // viewcomments(postID);
+        viewcomments(postID,'post',()=>{
+            const commentlist = document.getElementById(`comment-list-${postID}`);
+            commentlist.scrollTop=0;
+        });
     })
 }
 

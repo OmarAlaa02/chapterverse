@@ -268,7 +268,7 @@ exports.getComments=async(req,res)=>{
         comments=await commentsDB.find({postID:postID}).sort({_id:-1}).limit(4);
     else
         comments=await commentsDB.find({_id:{$lt:lastcommentsID},postID:postID}).sort({_id:-1}).limit(4);
-
+    const post=await postsDB.findById(postID);
     let users=[];
     for(let comment of comments)
     {
@@ -276,6 +276,7 @@ exports.getComments=async(req,res)=>{
     }
     res.json({comments:comments,
         users:users,
+        commentcount:post.commentcount,
         lastcommentsID:comments[comments.length-1]?._id || lastcommentsID
     });
 }
