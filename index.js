@@ -54,6 +54,6 @@ mongoose.connect(url,{
     
 })
 .then(() => {
-        app.listen(3000, () => console.log('listeing'));
+        app.listen(process.env.PORT || 3000, () => console.log('listeing'));
     })
     .catch(err => console.log(err));
