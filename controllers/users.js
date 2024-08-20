@@ -123,15 +123,24 @@ exports.getHomePage=async(req,res)=>{
     followers.push(req.session.userID);
 
     const posts=await postsDB.find({authorID:{$in:followers}}).sort({ _id: -1 }).limit(limit);
-
+    
     //will lower complexity after pagination
-    for(let post of posts)
+
+    //likesDB.find({postID:post._id,userID:req.session.userID})
+    const users=await Promise.all([
+        UsersDB.findById(posts[0]?.authorID),
+        UsersDB.findById(posts[1]?.authorID),
+        UsersDB.findById(posts[2]?.authorID),
+        UsersDB.findById(posts[3]?.authorID),
+    ]
+    )
+    console.log(users);
+
+    for(let i=0;i<Math.min(posts.length,4);i++)
     {
-        const user=await UsersDB.findById(post.authorID);
-        const isliked=(await likesDB.find({postID:post._id,userID:req.session.userID})).length > 0;
-        post.authorname=user.username;
-        post.authorprofilepicture=user.profilepicture;
-        post.isliked=isliked;
+        posts[i].authorname=users[i].username;
+        posts[i].authorprofilepicture=users[i].profilepicture;
+        // post.isliked=isliked;
     }
 
     res.render('homePage',{
@@ -327,17 +336,19 @@ exports.getloadposts=async(req,res)=>{
     const posts=await postsDB.find({_id:{$lt : lastpostID},authorID:{$in:followers}}).sort({ _id: -1 }).limit(limit);
 
     //filterEnd
+    const users=await Promise.all([
+        UsersDB.findById(posts[0]?.authorID),
+        UsersDB.findById(posts[1]?.authorID),
+        UsersDB.findById(posts[2]?.authorID),
+        UsersDB.findById(posts[3]?.authorID)
+    ]);
+    
     let authordata=[];
-    for(let post of posts)
+    for(let i=0;i<Math.min(4,posts.length);i++)
     {
-        //add view
-        // const viewEntry=new viewsDB({userID:req.session.userID , postID:post._id});
-        // //optional await
-        // viewEntry.save();
-
-        const user=await UsersDB.findById(post.authorID);
-        const isliked=(await likesDB.find({postID:post._id,userID:req.session.userID})).length > 0;
-        authordata.push({authorname:user.username,authorprofilepicture:user.profilepicture,isliked:isliked})
+        // const isliked=(await likesDB.find({postID:post._id,userID:req.session.userID})).length > 0;
+        const isliked=false;
+        authordata.push({authorname:users[i].username,authorprofilepicture:users[i].profilepicture,isliked:isliked})
     }
     res.json({
         posts:posts,
