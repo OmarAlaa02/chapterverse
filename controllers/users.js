@@ -277,15 +277,18 @@ exports.getComments=async(req,res)=>{
         comments=await commentsDB.find({postID:postID}).sort({_id:-1}).limit(4);
     else
         comments=await commentsDB.find({_id:{$lt:lastcommentsID},postID:postID}).sort({_id:-1}).limit(4);
-    const post=await postsDB.findById(postID);
-    let users=[];
-    for(let comment of comments)
-    {
-        users.push(await UsersDB.findById(comment.userID));
-    }
+
+    let all=await Promise.all([
+        UsersDB.findById(comments[0]?.userID),
+        UsersDB.findById(comments[1]?.userID),
+        UsersDB.findById(comments[2]?.userID),
+        UsersDB.findById(comments[3]?.userID),
+        postsDB.findById(postID)
+    ]);
+    
     res.json({comments:comments,
-        users:users,
-        commentcount:post.commentcount,
+        users:all,
+        commentcount:all[4].commentcount,
         lastcommentsID:comments[comments.length-1]?._id || lastcommentsID
     });
 }

@@ -76,7 +76,7 @@ function viewcomments(postId,caller,cb) {
                 if(caller  === 'post' || wasclosed)
                     commentsList.innerHTML='';
 
-                for (let i = 0; i < data.users.length; i++) {
+                for (let i = 0; i < data.comments.length; i++) {
                     commentsList.innerHTML +=
                         `<div class="comment">
                             <img src="${data.users[i].profilepicture}" alt="User Avatar" class="comment-avatar">
