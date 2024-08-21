@@ -160,10 +160,6 @@ exports.getAddPost=(req,res)=>{
 
 exports.getProfilePage=async(req,res)=>{
 
-    // const user=await UsersDB.findById(req.session.userID);
-    // const posts=await postsDB.find({authorID:user._id});
-    // console.log(user);
-    // console.log(posts);
 
     const all = await Promise.all([
         UsersDB.findById(req.session.userID),
@@ -176,10 +172,10 @@ exports.getProfilePage=async(req,res)=>{
 
     //TODO : must be fixed
 
-    for(let post of posts)
-    {
-        post.isliked=(await likesDB.find({userID:user._id,postID:post._id})).length >0;
-    }
+    // for(let post of posts)
+    // {
+    //     post.isliked=(await likesDB.find({userID:user._id,postID:post._id})).length >0;
+    // }
 
     res.render('profilePage',{
         user:user,
@@ -229,7 +225,7 @@ exports.postSearchPage=async(req,res)=>{
     });
 }
 
-exports.postAddPost=async(req,res,next)=>{
+exports.postAddPost=(req,res,next)=>{
     req.body.authorID=req.session.userID;
     req.body.likecount=0;
     req.body.commentcount=0;
@@ -237,7 +233,7 @@ exports.postAddPost=async(req,res,next)=>{
         req.body.img=req.file.path;
 
     const addedPost=new postsDB(req.body);
-    await addedPost.save().then(()=>{
+    addedPost.save().then(()=>{
         //console.log(addedpost)
         res.redirect('/home');
     })
@@ -291,6 +287,9 @@ exports.getComments=async(req,res)=>{
     const postID=req.params.ID;
     const lastcommentsID=req.params.lastcommetnID;
     let comments; 
+
+    //can be further optimized
+
     if(lastcommentsID === '0')
         comments=await commentsDB.find({postID:postID}).sort({_id:-1}).limit(4);
     else
@@ -350,13 +349,9 @@ exports.getloadposts=async(req,res)=>{
     
     followers=followers.map(user=>user.followedID);
     followers.push(req.session.userID);
-    //filterStart
-
-    // let viewedposts=await viewsDB.find({userID:req.session.userID}).select('postID');
-    // viewedposts=viewedposts.map(post=>post.postID);
+    
     const posts=await postsDB.find({_id:{$lt : lastpostID},authorID:{$in:followers}}).sort({ _id: -1 }).limit(limit);
-    // console.log(posts);
-    //filterEnd
+
     const users=await Promise.all([
         UsersDB.findById(posts[0]?.authorID),
         UsersDB.findById(posts[1]?.authorID),
@@ -382,15 +377,21 @@ exports.getloadposts=async(req,res)=>{
 
 exports.getseeprofile=async(req,res)=>
 {
-    userid=req.params.ID;
+    const userid=req.params.ID;
     //console.log(userid);
-    user=await UsersDB.findById(userid);
+
+    const all=await Promise.all([
+        UsersDB.findById(userid),
+        postsDB.find({authorID:userid})
+    ])
+
+    const user=all[0];
     console.log(user);
-    const posts=await postsDB.find({authorID:user._id});
-    for(let post of posts)
-        {
-            post.isliked=(await likesDB.find({userID:user._id,postID:post._id})).length >0;
-        }
+    const posts=all[1];
+    // for(let post of posts)
+    //     {
+    //         post.isliked=(await likesDB.find({userID:user._id,postID:post._id})).length >0;
+    //     }
 
     res.render('seeprofile',{
         user:user,
