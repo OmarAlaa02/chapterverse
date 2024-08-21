@@ -134,7 +134,7 @@ exports.getHomePage=async(req,res)=>{
         UsersDB.findById(posts[3]?.authorID),
     ]
     )
-    console.log(users);
+    // console.log(users);
 
     for(let i=0;i<Math.min(posts.length,4);i++)
     {
@@ -149,8 +149,6 @@ exports.getHomePage=async(req,res)=>{
         user:req.session.userID
     });
 
-    
-
 }
 
 
@@ -162,9 +160,20 @@ exports.getAddPost=(req,res)=>{
 
 exports.getProfilePage=async(req,res)=>{
 
-    const user=await UsersDB.findById(req.session.userID);
-    const posts=await postsDB.find({authorID:user._id});
-    
+    // const user=await UsersDB.findById(req.session.userID);
+    // const posts=await postsDB.find({authorID:user._id});
+    // console.log(user);
+    // console.log(posts);
+
+    const all = await Promise.all([
+        UsersDB.findById(req.session.userID),
+        postsDB.find({authorID:req.session.userID})
+    ]);
+
+    const user=all[0];
+    const posts=all[1];
+
+
     //TODO : must be fixed
 
     for(let post of posts)
@@ -188,9 +197,18 @@ exports.getSearchPage= async(req,res)=>{
 
 exports.postSearchPage=async(req,res)=>{
 
-    search=req.body.search;
-    const users=await UsersDB.find({ username: new RegExp(search, 'i') , _id:{$ne:req.session.userID}}) ;
-    const followers=await followsDB.find({followerID:req.session.userID},{followedID:true});
+    const search=req.body.search;
+
+    const all=await Promise.all([
+        UsersDB.find({ username: new RegExp(search, 'i') , _id:{$ne:req.session.userID}}),
+        followsDB.find({followerID:req.session.userID},{followedID:true})
+    ])
+
+
+    const users=all[0];
+    const followers=all[1];
+
+
 
     //optimize O(N*M)
     for(let user of users)
@@ -337,7 +355,7 @@ exports.getloadposts=async(req,res)=>{
     // let viewedposts=await viewsDB.find({userID:req.session.userID}).select('postID');
     // viewedposts=viewedposts.map(post=>post.postID);
     const posts=await postsDB.find({_id:{$lt : lastpostID},authorID:{$in:followers}}).sort({ _id: -1 }).limit(limit);
-
+    // console.log(posts);
     //filterEnd
     const users=await Promise.all([
         UsersDB.findById(posts[0]?.authorID),
