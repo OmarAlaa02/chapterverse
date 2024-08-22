@@ -59,7 +59,8 @@ function viewcomments(postId,caller,cb) {
         const wasclosed = commentsSection.style.display === 'none' || commentsSection.style.display === '';
         commentsSection.style.display = 'block'; // Load comments when the section is shown
         const lastcommentsIDspan=document.getElementById(`page-${postId}`);
-        
+        console.log(postId);
+        console.log(lastcommentsIDspan);
         if(caller  === 'post' || wasclosed)
             lastcommentsIDspan.textContent=0;
         const lastcommentsID=lastcommentsIDspan.textContent;
@@ -206,6 +207,7 @@ function loadposts() {
                         </div>
 
                         <div id="comments-section-${post._id}" class="comments-section">
+                            <span class="hidden-span" id="page-${post._id}">0</span>
                             <div class="comments-list" id="comment-list-${post._id}">
                                 <!-- Comments will be loaded here -->
                             </div>
